@@ -28,11 +28,10 @@ created() {
        this.ideas = response.data;
        return true;
      } catch (error) {
-       console.log(error);
+       error;
      }
    },
    async deleteIdea(idea){
-     console.log("in delete idea");
      try {
        await axios.delete("/api/saved/" + idea._id);
        this.getIdeas();
