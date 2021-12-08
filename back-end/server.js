@@ -27,12 +27,12 @@ const itemSchema = new mongoose.Schema({
   part3: String,
 });
 
-// const savedSchema = new mongoose.Schema({
-//   savedString: String,
-// });
+const savedSchema = new mongoose.Schema({
+  savedString: String,
+});
 
 const Item = mongoose.model('Item', itemSchema);
-// const SavedString = mongoose.model('SavedString', savedSchema);
+const SavedString = mongoose.model('SavedString', savedSchema);
 
 app.post('/api/photos', upload.single('photo'), async (req, res) => {
   console.log("upload photo");
@@ -62,19 +62,19 @@ app.post('/api/items', async (req, res) => {
   }
 });
 
-// app.post('/api/saved', async (req, res) => {
-//   console.log("in upload SAVED function" + req.body.savedString);
-//   const saved = new SavedString({
-//     savedString: req.body.savedString,
-//   });
-//   try {
-//     await saved.save();
-//     res.send(saved);
-//   } catch (error) {
-//     console.log(error);
-//     res.sendStatus(500);
-//   }
-// });
+app.post('/api/saved', async (req, res) => {
+  console.log("in upload SAVED function" + req.body.savedString);
+  const saved = new SavedString({
+    savedString: req.body.savedString,
+  });
+  try {
+    await saved.save();
+    res.send(saved);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
 
 app.get('/api/items', async (req, res) => {
   try {
@@ -86,10 +86,34 @@ app.get('/api/items', async (req, res) => {
   }
 });
 
+app.get('/api/saved', async (req, res) => {
+  console.log("in saved get");
+  try {
+    let ideas = await SavedString.find();
+    res.send(ideas);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
 app.delete('/api/items/:id', async (req, res) =>{
   console.log("in the delete function");
   try{
     await Item.deleteOne({
+      _id: req.params.id
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+app.delete('/api/saved/:id', async (req, res) =>{
+  console.log("in the delete SAVED function");
+  try{
+    await SavedString.deleteOne({
       _id: req.params.id
     });
     res.sendStatus(200);

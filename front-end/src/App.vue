@@ -13,7 +13,7 @@
   </div>
   <div class="footer">
 
-    <a href="https://github.com/BYUCS260/museum-Churchillc">GitHub</a>
+    <a href="https://github.com/Churchillc/ideaGenerator">GitHub</a>
   </div>
 </div>
 </template>

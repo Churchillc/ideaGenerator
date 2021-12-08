@@ -1,10 +1,5 @@
 <template>
 <div class="home">
-  <!-- <div class="image" v-for="item in items" :key="item.id">
-    <h2>{{item.part1}}</h2>
-    <h2>{{item.part2}}</h2>
-    <h2>{{item.part3}}</h2>
-  </div> -->
 <div class="main">
   <div class="spacer"></div>
   <h2>{{part1}} {{part2}} {{part3}}</h2>
@@ -13,7 +8,7 @@
     <button class="button" @click="generate">Generate Ideas</button>
   </div>
   <div class="center">
-    <button class="save-button" @click="saveIdea">Save to My Ideas</button>
+    <button v-if="notsaved" class="save-button" @click="uploadSaved">Save to My Ideas</button>
   </div>
 
   <div class="spacer"></div>
@@ -41,6 +36,7 @@ export default {
    part1: "",
    part2: "",
    part3: "",
+   notsaved: true,
   }
 },
 created() {
@@ -67,12 +63,18 @@ created() {
     this.part2 = this.items[index2].part2;
     this.part3 = this.items[index3].part3;
     console.log("Generate!");
+    this.notsaved = true;
   },
-
-  saveIdea() {
-    console.log("save idea called from home");
-    this.$root.$data.savedIdeas.push(this.part1 + " " + this.part2 + " " + this.part3);
-
+  async uploadSaved() {
+    this.notsaved = false;
+    console.log("uploadSaved called from home");
+  try {
+    await axios.post('/api/saved', {
+      savedString: this.part1 + " " + this.part2 + " " + this.part3,
+    });
+  } catch (error) {
+    error;
+  }
 },
 },
 }

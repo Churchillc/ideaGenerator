@@ -2,17 +2,46 @@
 <div class="home">
 <div class="main">
 <h1>My Saved Ideas</h1>
-<div class="savedString" v-for="product in products" :key="product.id">
+<div class="idea" v-for="idea in ideas" :key="idea.id">
+  <p>{{idea.savedString}}</p>
+  <button class="button" @click="deleteIdea(idea)">X</button>
 </div>
-
+</div>
 </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
-  props: {
-    products: this.$root.$data.savedIdeas,
-  },
+  data() {
+  return {
+   ideas: [],
+  }
+},
+created() {
+   this.getIdeas();
+ },
+  methods: {
+   async getIdeas() {
+     try {
+       let response = await axios.get("/api/saved");
+       this.ideas = response.data;
+       return true;
+     } catch (error) {
+       console.log(error);
+     }
+   },
+   async deleteIdea(idea){
+     console.log("in delete idea");
+     try {
+       await axios.delete("/api/saved/" + idea._id);
+       this.getIdeas();
+       return true;
+     } catch (error) {
+       error;
+     }
+   }
+ }
 }
 
 </script>
@@ -25,7 +54,11 @@ export default {
   2F3061 - dark blue
   FFE66D - yellow
   6CA6C1 - light blue*/
-
+.idea{
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+}
 
 h2 {
   font-size: 20px;
@@ -46,17 +79,17 @@ body{
 }
 
 .button{
-  width: 200px;
-  height: 50px;
-  font-size: 20px;
-  background-color: #2F3061;
+  width: 25px;
+  height: 25px;
+  font-size: 10px;
+  background-color: #343434;
   border-width: 0px;
   color: #F7FFF7;
 }
 
 .button:hover{
-  width: 210px;
-  height: 55px;
+  width: 30px;
+  height: 30px;
 }
 
 .save-button:hover{
