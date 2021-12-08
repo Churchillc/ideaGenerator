@@ -1,17 +1,17 @@
 <template>
   <div class="admin">
-  <h1>The Admin Page!</h1>
+  <h1>Idea Creation</h1>
   <div class="heading">
-    <div class="circle">1</div>
-    <h2>Add an Item</h2>
+    <div class="circle">+</div>
+    <h2>Create a new item</h2>
   </div>
   <div class="add">
     <div class="form">
-      <input v-model="title" placeholder="Title">
-      <input v-model="description" placeholder="Description">
-      <p></p>
-      <input type="file" name="photo" @change="fileChanged">
-      <button @click="upload">Upload</button>
+      <input v-model="part1" placeholder="Enter part 1">
+      <input v-model="part2" placeholder="Enter part 2">
+      <input v-model="part3" placeholder="Enter part 3">
+      <p><em>Note that parts will be shuffled to generate random ideas</em></p>
+      <button @click="upload">Add to database</button>
     </div>
     <div class="upload" v-if="addItem">
       <h2>{{addItem.title}}</h2>
@@ -19,26 +19,27 @@
     </div>
   </div>
   <div class="heading">
-    <div class="circle">2</div>
-    <h2>Edit/Delete an Item</h2>
+    <div class="circle">-</div>
+    <h2>Edit/Delete items in database</h2>
   </div>
   <div class="edit">
     <div class="form">
       <input v-model="findTitle" placeholder="Search">
       <div class="suggestions" v-if="suggestions.length > 0">
-        <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.title}}
+        <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.part1}} {{s.part2}} {{s.part3}}
         </div>
       </div>
     </div>
     <div class="upload" v-if="findItem">
-      <input v-model="findItem.title">
-      <input v-model="findItem.description">
+      <input v-model="findItem.part1">
+      <input v-model="findItem.part2">
+      <input v-model="findItem.part3">
       <p></p>
       <img :src="findItem.path" />
     </div>
     <div class="actions" v-if="findItem">
       <button @click="deleteItem(findItem)">Delete</button>
-      <button @click="editItem(findItem)">Edit</button>
+      <button @click="editItem(findItem)">Save</button>
     </div>
   </div>
 
@@ -71,11 +72,10 @@
 }
 
 .circle {
-  border-radius: 50%;
   width: 18px;
   height: 18px;
   padding: 8px;
-  background: #333;
+  background: #2F3061;
   color: #fff;
   text-align: center
 }
@@ -104,7 +104,7 @@ button {
 
 /* Suggestions */
 .suggestions {
-  width: 200px;
+  width: 100%;
   border: 1px solid #ccc;
 }
 
@@ -130,16 +130,17 @@ export default {
     items: [],
     findTitle: "",
     findItem: null,
-    title: "",
-    description: "",
+    part1: "",
+    part2: "",
+    part3: "",
     file: null,
     addItem: null,
   }
 },
 computed: {
   suggestions() {
-    let items = this.items.filter(item => item.title.toLowerCase().startsWith(this.findTitle.toLowerCase()));
-    return items.sort((a, b) => a.title > b.title);
+    let items = this.items.filter(item => item.part1.toLowerCase().startsWith(this.findTitle.toLowerCase()));
+    return items.sort((a, b) => a.part1 > b.part1);
   }
 },
 
@@ -151,14 +152,16 @@ methods: {
     this.file = event.target.files[0]
   },
   async upload() {
+    console.log("upload admin");
   try {
-    const formData = new FormData();
-    formData.append('photo', this.file, this.file.name)
-    let r1 = await axios.post('/api/photos', formData);
+  //  const formData = new FormData();
+  //  formData.append('photo', this.file, this.file.name)
+  //  let r1 = await axios.post('/api/photos', formData);
     let r2 = await axios.post('/api/items', {
-      title: this.title,
-      path: r1.data.path,
-      description: this.description,
+      part1: this.part1,
+    //  path: r1.data.path,
+      part2: this.part2,
+      part3: this.part3,
     });
     this.addItem = r2.data;
   } catch (error) {
@@ -191,8 +194,9 @@ async deleteItem(item) {
 async editItem(item) {
   try {
     await axios.put("/api/items/" + item._id, {
-      title: this.findItem.title,
-      description: this.findItem.description,
+      part1: this.findItem.part1,
+      part2: this.findItem.part2,
+      part3: this.findItem.part3,
     });
     this.findItem = null;
     this.getItems();

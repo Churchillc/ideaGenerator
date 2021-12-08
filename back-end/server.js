@@ -22,14 +22,20 @@ mongoose.connect('mongodb://localhost:27017/museum', {
 });
 
 const itemSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  path: String,
+  part1: String,
+  part2: String,
+  part3: String,
 });
 
+// const savedSchema = new mongoose.Schema({
+//   savedString: String,
+// });
+
 const Item = mongoose.model('Item', itemSchema);
+// const SavedString = mongoose.model('SavedString', savedSchema);
 
 app.post('/api/photos', upload.single('photo'), async (req, res) => {
+  console.log("upload photo");
   // Just a safety check
   if (!req.file) {
     return res.sendStatus(400);
@@ -40,10 +46,12 @@ app.post('/api/photos', upload.single('photo'), async (req, res) => {
 });
 
 app.post('/api/items', async (req, res) => {
+  console.log("in upload function");
   const item = new Item({
-    title: req.body.title,
-    path: req.body.path,
-    description: req.body.description
+    part1: req.body.part1,
+    //path: req.body.path,
+    part2: req.body.part2,
+    part3: req.body.part3,
   });
   try {
     await item.save();
@@ -53,6 +61,20 @@ app.post('/api/items', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+// app.post('/api/saved', async (req, res) => {
+//   console.log("in upload SAVED function" + req.body.savedString);
+//   const saved = new SavedString({
+//     savedString: req.body.savedString,
+//   });
+//   try {
+//     await saved.save();
+//     res.send(saved);
+//   } catch (error) {
+//     console.log(error);
+//     res.sendStatus(500);
+//   }
+// });
 
 app.get('/api/items', async (req, res) => {
   try {
@@ -83,8 +105,9 @@ app.put('/api/items/:id', async (req, res) =>{
     var foundItem = await Item.findOne({
       _id: req.params.id
     });
-    foundItem.title = req.body.title;
-    foundItem.description = req.body.description;
+    foundItem.part1 = req.body.part1;
+    foundItem.part2 = req.body.part2;
+    foundItem.part3 = req.body.part3;
     foundItem.save();
     res.sendStatus(200);
   } catch (error) {

@@ -1,20 +1,18 @@
 <template>
 <div id="app">
   <div class="header">
-    <router-link to="/">
-      <div class="logo">
-        <img src="/ordinary.png">
-      </div>
-    </router-link>
+
     <div class="title">
-      <h1>Museum of Ordinary Objects</h1>
+      <router-link to="/">
+        <h1>Website Idea Generator</h1>
+      </router-link>
     </div>
   </div>
   <div class="content">
     <router-view />
   </div>
   <div class="footer">
-    <router-link to="/admin">Admin</router-link>
+
     <a href="https://github.com/BYUCS260/museum-Churchillc">GitHub</a>
   </div>
 </div>
@@ -37,8 +35,8 @@ body {
 .header {
   display: flex;
   padding: 10px 100px 0px 100px;
-  background-color: #5BDEFF;
-  color: #1C454F;
+  background-color: #2F3061;
+  color: #F7FFF7;
 }
 
 .title {
@@ -54,16 +52,27 @@ body {
   min-height: 500px;
 }
 
+a:link {
+  text-decoration: none;
+  color: #F7FFF7;
+}
+/* visited link */
+a:visited {
+  color: #F7FFF7;
+}
+
+/* mouse over link */
+
 /* Footer */
 .footer {
   height: 50px;
   padding: 20px 100px 0px 100px;
-  background: #e3e3e3;
+  background: #343434;
   font-size: 12px;
 }
 
 .footer a {
-  color: #000;
+  color: white;
 }
 
 h1 {
